@@ -1,5 +1,4 @@
 SafePurdue 🛡️
-
 A survivor-centered decision-support tool for Purdue students
 
 SafePurdue is a non-directive, survivor-centered chatbot and timeline interface designed to help students explore medical, forensic, academic, and reporting options after sexual assault — without pressure, deadlines, or requirements.
