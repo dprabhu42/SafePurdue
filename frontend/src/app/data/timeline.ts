@@ -9,7 +9,7 @@ export type ClockStage = {
   focus: string;      // e.g. "Safety, grounding, preserving options."
   rangeStart: number; // inclusive
   rangeEnd: number;   // exclusive
-  medical: string[];
+  medical: string[]; 
   forensic: string[];
   support: string[];
   reminder: string[]; // can be 1+ lines
