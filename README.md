@@ -35,7 +35,7 @@ SafePurdue does **not** tell users what to do. It helps users understand **what 
   - optional reporting
 - Reinforces that **support remains available months later**
 
-### 💬 SafePurdue Chatbot (Option A — No RAG)
+### 💬 SafePurdue Chatbot
 - A **rule-based chatbot** that:
   - detects user intent (medical, confidential support, reporting, academic/housing, crisis)
   - ranks and returns the **top 5 most relevant campus resources**
@@ -58,12 +58,12 @@ Based on what a user shares, the chatbot surfaces relevant Purdue resources such
 - ❌ Not therapy  
 - ❌ Not a reporting system  
 - ❌ Not a substitute for medical or legal professionals  
-- ❌ Not a crisis hotline (but it can point users to one)
+- ❌ Not a crisis hotline (but it will point users to one)
 
 ---
 
-## 🧠 How the Chatbot Works (No RAG)
-SafePurdue uses a **deterministic rules engine** instead of retrieval-augmented generation.
+## 🧠 How the Chatbot Works 
+SafePurdue uses a **deterministic rules engine** .
 
 **Flow:**
 1. User enters a message  
@@ -73,7 +73,6 @@ SafePurdue uses a **deterministic rules engine** instead of retrieval-augmented 
 5. Return:
    - supportive response
    - top 5 relevant resources
-   - optional time-window context (based on clicked clock stage)
 
 This approach:
 - minimizes hallucination risk
