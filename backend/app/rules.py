@@ -29,7 +29,7 @@ INTENTS = [
 ]
 # keyword weights: higher weight = stronger signal for that intent
 KEYWORDS: Dict[str, Dict[str, int]] = {
-    "medical"{
+    "medical: "{
         "doctor": 3,
         "hospital": 3,
         "medical": 3,
