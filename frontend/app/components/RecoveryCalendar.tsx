@@ -55,8 +55,8 @@ export default function RecoveryCalendar({
   sections: RecoverySection[];
   coreMessage: string;
 }) {
-  const daysSection = sections[0];
-  const slideSections = sections.slice(1);
+  const daysSection = sections?.[0];
+  const slideSections = sections?.slice(1) ?? [];
 
   return (
     <div className="panel">
@@ -65,18 +65,17 @@ export default function RecoveryCalendar({
         <p className="panelSub">{coreMessage}</p>
       </div>
 
+      {/* Calendar-look block */}
       <div className="calendarWrap">
         <div className="calendarHeader">
           <div className="calendarMonth">Recovery timeline</div>
           <div className="calendarHint">Daily → weekly → monthly</div>
         </div>
 
-        {/* Simple 14-day “calendar image feel” */}
         <div className="calendarGrid">
           {Array.from({ length: 14 }, (_, i) => {
             const dayNum = i + 1;
-            const isPostWindow = dayNum >= 6; // highlight 6–14
-
+            const isPostWindow = dayNum >= 6;
             return (
               <div
                 key={dayNum}
@@ -84,13 +83,14 @@ export default function RecoveryCalendar({
                 aria-label={`Day ${dayNum}`}
               >
                 <div className="calendarDayNum">Day {dayNum}</div>
-                {dayNum === 6 && <div className="calendarTag">Start</div>}
+                {isPostWindow && dayNum === 6 && (
+                  <div className="calendarTag">Start</div>
+                )}
               </div>
             );
           })}
         </div>
 
-        {/* The content below the calendar */}
         {daysSection && (
           <details className="calendarDetails" open>
             <summary className="calendarSummary">
@@ -103,24 +103,56 @@ export default function RecoveryCalendar({
         )}
       </div>
 
-      {/* Later phases as swipe cards */}
+      {/* Slides header */}
       <div className="slidesHeader">
-        <div className="slidesTitle">Later support</div>
-        <div className="slidesSub">Scroll → each card is a phase with options and support.</div>
+        <div className="slidesTitle">Later support (you can return anytime)</div>
+        <div className="slidesSub">
+          Swipe or scroll — each card shows options and reminders.
+        </div>
       </div>
 
+      {/* Slides row */}
       <div className="slidesRow" role="region" aria-label="Recovery timeline slides">
         {slideSections.map((s) => (
           <SectionCard key={s.id} s={s} />
         ))}
 
+        {/* Survivor-voiced, neutral quotes */}
         <div className="slideCard affirmationCard">
-          <div className="slideTitle">Words of support</div>
-          <ul className="bullets">
-            <li>You’re allowed to go at your pace.</li>
-            <li>You don’t need the “right” story to deserve help.</li>
-            <li>Support is still valid even if time has passed.</li>
-            <li>You can pause and come back whenever you want.</li>
+          <div className="slideTitle">Words survivors have shared</div>
+          <p className="muted" style={{ marginTop: 6 }}>
+            Shared anonymously. Experiences differ. Support is optional.
+          </p>
+
+          <ul className="bullets" style={{ marginTop: 12 }}>
+            <li>
+              “I didn’t know what I wanted at first. Having information without pressure helped me
+              feel more in control.”
+            </li>
+            <li>
+              “It mattered that I could talk to someone confidentially before deciding anything
+              else.”
+            </li>
+            <li>
+              “I thought I waited too long — but I learned support was still available when I was
+              ready.”
+            </li>
+            <li>
+              “Nothing was forced. I was allowed to ask questions and leave when I needed to.”
+            </li>
+            <li>
+              “Knowing my options existed helped, even when I wasn’t ready to act on them yet.”
+            </li>
+            <li>
+              “I appreciated that I could come back later without having to explain myself.”
+            </li>
+            <li>
+              “Getting information didn’t mean committing to anything, and that made it easier to
+              take the next step.”
+            </li>
+            <li>
+              “Support looked different for me over time, and that was okay.”
+            </li>
           </ul>
         </div>
       </div>

@@ -5,19 +5,19 @@ export type TimelineSection = {
 
 export type ClockStage = {
   id: string;
-  title: string;      // e.g. "HOURS 0–6 — Immediate Safety & Stabilization"
-  focus: string;      // e.g. "Safety, grounding, preserving options."
-  rangeStart: number; // inclusive
-  rangeEnd: number;   // exclusive
-  medical: string[]; 
+  title: string;
+  focus: string;
+  rangeStart: number;
+  rangeEnd: number;
+  medical: string[];
   forensic: string[];
   support: string[];
-  reminder: string[]; // can be 1+ lines
+  reminder: string[];
 };
 
 export type TimelineHour = {
-  hourIndex: number; // 0..119
-  label: string;     // e.g. "Day 1 • Hour 3 (3h)"
+  hourIndex: number;
+  label: string;
   stage: ClockStage;
 };
 
@@ -27,7 +27,7 @@ export type RecoverySection = {
   medical: string[];
   reporting: string[];
   support: string[];
-  extra?: { title: string; bullets: string[] }[]; // for overviews like confidential vs formal
+  extra?: { title: string; bullets: string[] }[];
 };
 
 export const WHAT_TO_KNOW_ALWAYS: string[] = [
@@ -38,6 +38,10 @@ export const WHAT_TO_KNOW_ALWAYS: string[] = [
   "These steps are not a checklist and not the only path forward.",
   "This tool does not replace personalized support from medical or advocacy professionals.",
 ];
+
+/* -------------------------
+   CLOCK STAGES (0–120h)
+-------------------------- */
 
 export const CLOCK_STAGES: ClockStage[] = [
   {
@@ -59,15 +63,13 @@ export const CLOCK_STAGES: ClockStage[] = [
       "If preserving evidence is important to you, avoiding actions such as changing clothes, showering, brushing teeth, or using the restroom may help — only if and when you feel ready.",
     ],
     support: [
-      "Confidential advocacy is available through CARE at Purdue (walk-ins and appointments).",
-      "The 988 Suicide & Crisis Lifeline is available 24/7 by call or text for emotional support.",
-      "Reaching out to a trusted person (friend, family member) can help, if you want.",
+      "Confidential advocacy is available through CARE at Purdue.",
+      "The 988 Suicide & Crisis Lifeline is available 24/7 by call or text.",
+      "Reaching out to a trusted person can help, if you want.",
     ],
-    reminder: [
-      "Nothing needs to be decided right now.",
-      "Your safety comes first.",
-    ],
+    reminder: ["Nothing needs to be decided right now.", "Your safety comes first."],
   },
+
   {
     id: "6-12",
     title: "HOURS 6–12 — Early Care Window",
@@ -86,14 +88,12 @@ export const CLOCK_STAGES: ClockStage[] = [
       "Reporting remains optional and separate.",
     ],
     support: [
-      "CARE can explain medical care, evidence collection, and campus options (including Title IX), only if you want.",
+      "CARE can explain medical care, evidence collection, and campus options, only if you want.",
       "Crisis counseling is available through CAPS.",
     ],
-    reminder: [
-      "You are not late.",
-      "You can choose now or later.",
-    ],
+    reminder: ["You are not late.", "You can choose now or later."],
   },
+
   {
     id: "12-24",
     title: "HOURS 12–24 — Decision Flexibility Window",
@@ -114,12 +114,12 @@ export const CLOCK_STAGES: ClockStage[] = [
       "Confidential reporting options can be explored if safety is a concern.",
     ],
     reminder: [
-      "Many people choose exams or reporting during this time, but there is no requirement.",
-      "There is no deadline for support.",
-      "Everyone reacts differently — there is no “right” or “wrong” path.",
-      "Resources remain available at any point.",
+      "There is no requirement to decide anything during this window.",
+      "Everyone reacts differently.",
+      "Support remains available at any point.",
     ],
   },
+
   {
     id: "24-48",
     title: "HOURS 24–48 — Strong Evidence Window",
@@ -137,14 +137,12 @@ export const CLOCK_STAGES: ClockStage[] = [
     ],
     support: [
       "Counseling and advocacy through CARE and CAPS are available.",
-      "Reporting through Purdue or law enforcement is an option, only if you want.",
+      "Reporting through Purdue or law enforcement is optional.",
       "Support from friends or family can be helpful.",
     ],
-    reminder: [
-      "Your options are still open.",
-      "Nothing expires suddenly.",
-    ],
+    reminder: ["Your options are still open.", "Nothing expires suddenly."],
   },
+
   {
     id: "48-72",
     title: "HOURS 48–72 — Transition Window",
@@ -157,18 +155,16 @@ export const CLOCK_STAGES: ClockStage[] = [
     ],
     forensic: [
       "Evidence collection may still be possible.",
-      "Some evidence types may decline, but this does not diminish your experience or trauma.",
-      "Medical providers tailor care and evidence collection to each individual situation.",
+      "Some evidence types may decline, but this does not diminish your experience.",
+      "Care is tailored to each individual situation.",
     ],
     support: [
-      "Advocacy and counseling through CARE and CAPS are strongly encouraged.",
-      "Academic accommodations and crisis support can be discussed.",
+      "Advocacy and counseling through CARE and CAPS remain available.",
+      "Academic accommodations can still be discussed.",
     ],
-    reminder: [
-      "Support does not expire.",
-      "Care is still meaningful.",
-    ],
+    reminder: ["Support does not expire.", "Care is still meaningful."],
   },
+
   {
     id: "72-96",
     title: "HOURS 72–96 — Late Forensic Window",
@@ -187,12 +183,9 @@ export const CLOCK_STAGES: ClockStage[] = [
       "Reporting options remain unchanged.",
       "Counseling and advocacy through CARE and CAPS remain available.",
     ],
-    reminder: [
-      "There is no wrong choice.",
-      "You are still eligible for care.",
-      "You are not late.",
-    ],
+    reminder: ["There is no wrong choice.", "You are not late."],
   },
+
   {
     id: "96-120",
     title: "HOURS 96–120 — Final Typical Forensic Window",
@@ -200,32 +193,31 @@ export const CLOCK_STAGES: ClockStage[] = [
     rangeStart: 96,
     rangeEnd: 120,
     medical: [
-      "Medical exams may still be offered depending on individual circumstances and state guidelines.",
+      "Medical exams may still be offered depending on individual circumstances.",
       "Emergency contraception may still be discussed.",
     ],
     forensic: [
       "Typical DNA collection windows may be nearing an end.",
-      "Medical providers assess options on an individual basis.",
       "Evidence storage may still be offered.",
     ],
     support: [
       "Ongoing support is available through CARE, CAPS, and the Office of the Dean of Students.",
       "School-based reporting remains an option regardless of timing.",
-      "Support does not end after the 5-day window.",
     ],
-    reminder: [
-      "Care continues beyond this window.",
-      "This is not the end of your options.",
-    ],
+    reminder: ["Care continues beyond this window."],
   },
 ];
 
+/* -------------------------
+   BUILD 120-HOUR TIMELINE
+-------------------------- */
+
 function getStageForHour(hourIndex: number): ClockStage {
-  // hourIndex in [0, 119]
-  const stage = CLOCK_STAGES.find(
-    (s) => hourIndex >= s.rangeStart && hourIndex < s.rangeEnd
+  return (
+    CLOCK_STAGES.find(
+      (s) => hourIndex >= s.rangeStart && hourIndex < s.rangeEnd
+    ) ?? CLOCK_STAGES[CLOCK_STAGES.length - 1]
   );
-  return stage ?? CLOCK_STAGES[CLOCK_STAGES.length - 1];
 }
 
 function hourLabel(hourIndex: number) {
@@ -234,18 +226,18 @@ function hourLabel(hourIndex: number) {
   return `Day ${day + 1} • Hour ${hourOfDay} (${hourIndex}h)`;
 }
 
-export const FIVE_DAY_TIMELINE: TimelineHour[] = Array.from({ length: 120 }, (_, hourIndex) => {
-  const stage = getStageForHour(hourIndex);
-  return {
+export const FIVE_DAY_TIMELINE: TimelineHour[] = Array.from(
+  { length: 120 },
+  (_, hourIndex) => ({
     hourIndex,
     label: hourLabel(hourIndex),
-    stage,
-  };
-});
+    stage: getStageForHour(hourIndex),
+  })
+);
 
-// --------------------
-// PART II — AFTER 120H
-// --------------------
+/* -------------------------
+   AFTER 120 HOURS
+-------------------------- */
 
 export const CORE_MESSAGE_ALWAYS_VISIBLE =
   "You can return to support at any time, even if months have passed. You are not alone.";
@@ -269,7 +261,7 @@ export const RECOVERY_TIMELINE: RecoverySection[] = [
         bullets: [
           "Confidential reporting focuses on support and privacy.",
           "Formal reporting involves investigation and potential disciplinary action.",
-          "CARE can help you understand both and help you come to the decision of which one is right for you to pursue without pressure.",
+          "CARE can help you understand both without pressure.",
         ],
       },
     ],
@@ -279,23 +271,30 @@ export const RECOVERY_TIMELINE: RecoverySection[] = [
       "Academic accommodations through the Office of the Dean of Students.",
     ],
   },
+
   {
     id: "weeks-2-4",
     title: "WEEKS 2–4 — Stabilization Phase",
     medical: [
       "Follow-up STI testing may be discussed.",
       "Continued care through PUSH, CARE, or CAPS.",
+      "Checking in with a provider about sleep, appetite, or stress-related symptoms can be helpful.",
     ],
     reporting: [
       "Title IX processes can be explored if desired.",
       "Law enforcement reporting remains optional.",
+      "Information about reporting can be revisited without starting a process.",
     ],
     support: [
       "Trauma-informed counseling.",
       "Support groups.",
       "Housing or academic adjustments.",
+      "Some people find it helpful to begin regular counseling or advocacy check-ins during this time.",
+      "Support may shift from crisis-focused to day-to-day coping and stabilization.",
+      "You can adjust or stop support at any point if your needs change.",
     ],
   },
+
   {
     id: "months-1-3",
     title: "MONTHS 1–3 — Long-Term Support Phase",
@@ -303,38 +302,31 @@ export const RECOVERY_TIMELINE: RecoverySection[] = [
       "Continued health follow-ups through PUSH or another provider.",
       "Follow-up testing as recommended.",
       "Referrals to additional providers if needed.",
-      "Medical documentation may still be accessible if you choose.",
     ],
     reporting: [
       "Reporting options remain available.",
       "There is no expiration on seeking information or support.",
-      "Possible documentation may include: medical records, academic accommodation records, communications with CARE or other offices.",
-      "CARE can help explain what exists and how it may be used (or not used).",
     ],
     support: [
       "Ongoing individual counseling through CAPS.",
       "Continued advocacy support through CARE.",
       "Legal advocacy resources available if you want information.",
-      "Survivor support networks or group options may be available.",
     ],
   },
+
   {
     id: "months-3-plus",
     title: "MONTHS 3+ — Ongoing Recovery Phase",
     medical: [
       "Continued access to wellness and mental health services.",
-      "Option to transition care off campus.",
-      "Support for long-term emotional, physical, or academic impacts.",
       "Care can be restarted at any time.",
     ],
     reporting: [
       "Reporting options can be revisited at any point.",
-      "CARE can help explain: what may have changed, what remains the same, what reporting would involve.",
       "Choosing not to report is always valid.",
     ],
     support: [
       "Continued access to campus and community resources.",
-      "You can re-enter support by contacting: CARE, CAPS, Title IX, or a trusted faculty or staff member.",
       "You do not need to explain why you are reaching out again.",
     ],
   },
