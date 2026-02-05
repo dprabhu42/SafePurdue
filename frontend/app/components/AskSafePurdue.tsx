@@ -30,41 +30,39 @@ export default function AskSafePurdue() {
   }
 
   return (
-    
     <div className="panel">
-  
-
       <div className="panelHeader">
         <h3 className="panelTitle">Ask SafePurdue</h3>
         <p className="panelSub">
           This tool provides options and campus resources. It does not tell you what to do.
         </p>
       </div>
-<div style={{ marginBottom: 12 }}>
-  <div style={{ fontWeight: 600, marginBottom: 6 }}>Example questions</div>
-  <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-    {[
-      "I want confidential support",
-      "What medical options are available?",
-      "Can I get academic accommodations?",
-      "This happened a while ago — can I still get help?"
-    ].map((q) => (
-      <button
-        key={q}
-        onClick={() => setMessage(q)}
-        style={{
-          padding: "6px 10px",
-          borderRadius: 16,
-          border: "1px solid #ccc",
-          background: "#f7f7f7",
-          cursor: "pointer"
-        }}
-      >
-        {q}
-      </button>
-    ))}
-  </div>
-</div>
+
+      <div style={{ marginBottom: 12 }}>
+        <div style={{ fontWeight: 600, marginBottom: 6 }}>Example questions</div>
+        <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+          {[
+            "I want confidential support",
+            "What medical options are available?",
+            "Can I get academic accommodations?",
+            "This happened a while ago — can I still get help?",
+          ].map((q) => (
+            <button
+              key={q}
+              onClick={() => setMessage(q)}
+              style={{
+                padding: "6px 10px",
+                borderRadius: 16,
+                border: "1px solid #ccc",
+                background: "#f7f7f7",
+                cursor: "pointer",
+              }}
+            >
+              {q}
+            </button>
+          ))}
+        </div>
+      </div>
 
       <div className="chatRow">
         <textarea
@@ -85,7 +83,8 @@ export default function AskSafePurdue() {
         <div className="chatResult">
           <div className="replyBox">
             <div className="replyLabel">Response</div>
-            <p className="replyText">{data.reply}</p>
+            {/* ✅ FIX: use data.response (not data.reply) */}
+            <p className="replyText">{data.response}</p>
           </div>
 
           <div className="replyBox">
