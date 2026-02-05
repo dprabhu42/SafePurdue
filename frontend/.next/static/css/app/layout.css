@@ -1,0 +1,669 @@
+/*!*************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[12].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[12].use[3]!./app/globals.css ***!
+  \*************************************************************************************************************************************************************************************************************************************************************/
+/* =========================================================
+   SafePurdue — Calm, high-end, Purdue-themed UI
+   Drop-in globals.css
+   ========================================================= */
+
+/* ---------- Design tokens ---------- */
+:root {
+  /* Purdue-inspired palette */
+  --gold: #cbb677;
+  --gold-2: #b9a25f;
+  --ink: #0b0c0f;
+  --bg0: #07080a;
+  --bg1: #0b0d11;
+  --panel: rgba(255, 255, 255, 0.06);
+  --panel2: rgba(255, 255, 255, 0.085);
+  --stroke: rgba(255, 255, 255, 0.10);
+  --stroke2: rgba(255, 255, 255, 0.14);
+  --text: rgba(255, 255, 255, 0.92);
+  --muted: rgba(255, 255, 255, 0.68);
+  --muted2: rgba(255, 255, 255, 0.56);
+  --shadow: 0 18px 50px rgba(0, 0, 0, 0.55);
+  --shadow2: 0 10px 30px rgba(0, 0, 0, 0.45);
+  --radius-xl: 28px;
+  --radius-lg: 20px;
+  --radius-md: 14px;
+
+  --content-max: 1200px;
+  --space-1: 8px;
+  --space-2: 12px;
+  --space-3: 16px;
+  --space-4: 20px;
+  --space-5: 28px;
+  --space-6: 36px;
+  --space-7: 48px;
+
+  --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+    "Courier New", monospace;
+  --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial,
+    "Apple Color Emoji", "Segoe UI Emoji";
+}
+
+/* ---------- Base ---------- */
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--sans);
+  color: var(--text);
+  background: radial-gradient(1200px 700px at 18% 8%, rgba(203, 182, 119, 0.16), transparent 55%),
+    radial-gradient(900px 600px at 82% 12%, rgba(203, 182, 119, 0.10), transparent 55%),
+    radial-gradient(1000px 800px at 50% 110%, rgba(255, 255, 255, 0.06), transparent 55%),
+    linear-gradient(180deg, var(--bg0), var(--bg1));
+}
+
+a {
+  color: var(--gold);
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+
+h1 {
+  font-size: clamp(64px, 7vw, 96px);
+  letter-spacing: -0.035em;
+  margin: 0;
+  line-height: 1.05;
+}
+
+h2,
+h3 {
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+strong {
+  color: rgba(255, 255, 255, 0.95);
+  font-weight: 650;
+}
+
+/* Make the main page feel centered + premium */
+main {
+  max-width: var(--content-max);
+  margin: 0 auto;
+}
+
+/* Subtle “start here” line */
+.muted {
+  color: var(--muted2);
+}
+
+/* ---------- Panels / cards ---------- */
+.panel {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.05));
+  border: 1px solid var(--stroke);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow);
+  padding: var(--space-6);
+  position: relative;
+  overflow: hidden;
+}
+
+.panel::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  pointer-events: none;
+  background: radial-gradient(800px 240px at 10% 0%, rgba(203, 182, 119, 0.10), transparent 60%),
+    radial-gradient(700px 240px at 90% 0%, rgba(255, 255, 255, 0.06), transparent 60%);
+  opacity: 0.9;
+}
+
+.panelHeader {
+  display: grid;
+  grid-gap: 10px;
+  gap: 10px;
+  margin-bottom: var(--space-4);
+  position: relative;
+  z-index: 1;
+}
+
+.panelTitle {
+  font-size: 18px;
+  font-weight: 720;
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.panelSub {
+  color: var(--muted);
+  line-height: 1.65;
+  max-width: 70ch;
+}
+
+/* ---------- Lists ---------- */
+.bullets {
+  margin: 10px 0 0;
+  padding-left: 18px;
+  display: grid;
+  grid-gap: 10px;
+  gap: 10px;
+  color: rgba(255, 255, 255, 0.78);
+  line-height: 1.7;
+}
+
+.bullets li {
+  margin: 0;
+}
+
+/* ---------- Clock styles ---------- */
+.clockWrap {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-gap: var(--space-4);
+  gap: var(--space-4);
+}
+
+.clockTop {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-gap: var(--space-4);
+  gap: var(--space-4);
+  align-items: start;
+}
+
+.pillGroup {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.pill {
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+  border: 1px solid var(--stroke2);
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.86);
+  padding: 10px 14px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: transform 140ms ease, background 140ms ease, border-color 140ms ease;
+  font-weight: 620;
+  font-size: 13px;
+}
+
+.pill:hover {
+  transform: translateY(-1px);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.pill.active {
+  background: rgba(203, 182, 119, 0.18);
+  border-color: rgba(203, 182, 119, 0.55);
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.clockMeta {
+  background: rgba(0, 0, 0, 0.18);
+  border: 1px solid var(--stroke);
+  border-radius: var(--radius-lg);
+  padding: 12px 14px;
+  min-width: 240px;
+}
+
+.metaTitle {
+  color: var(--muted2);
+  font-size: 12px;
+  margin-bottom: 6px;
+}
+
+.metaValue {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.hourGrid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  grid-gap: 10px;
+  gap: 10px;
+}
+
+.hourCell {
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+  border: 1px solid var(--stroke);
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.88);
+  padding: 12px 0;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: transform 120ms ease, background 120ms ease, border-color 120ms ease;
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.hourCell:hover {
+  transform: translateY(-1px);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.hourCell.active {
+  background: rgba(203, 182, 119, 0.18);
+  border-color: rgba(203, 182, 119, 0.65);
+  box-shadow: 0 0 0 1px rgba(203, 182, 119, 0.18);
+}
+
+/* Make clock feel bigger + less cramped on wide screens */
+@media (min-width: 1100px) {
+  .hourCell {
+    padding: 14px 0;
+    font-size: 14px;
+  }
+  .clockMeta {
+    min-width: 280px;
+  }
+}
+
+/* ---------- Stage Panel (right side) ---------- */
+.panel details {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 12px;
+}
+
+.panel summary {
+  cursor: pointer;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
+  color: rgba(255, 255, 255, 0.92);
+  font-weight: 700;
+  list-style: none;
+}
+
+.panel summary::-webkit-details-marker {
+  display: none;
+}
+
+.panel summary::before {
+  content: "▾";
+  display: inline-block;
+  margin-right: 10px;
+  color: rgba(203, 182, 119, 0.9);
+  transform: translateY(-1px);
+}
+
+.panel details[open] summary::before {
+  content: "▾";
+}
+
+/* ---------- Support image area ---------- */
+.supportMarkWrap {
+  display: grid;
+  justify-items: center;
+  grid-gap: 10px;
+  gap: 10px;
+  margin-top: -22px; /* pulls it up closer to the clock */
+  padding: 10px 0 0;
+  position: relative;
+}
+
+.supportMarkWrap::before {
+  content: "";
+  position: absolute;
+  inset: -30px -40px -10px -40px;
+  background: radial-gradient(380px 160px at 50% 55%, rgba(203, 182, 119, 0.18), transparent 65%);
+  opacity: 0.9;
+  pointer-events: none;
+}
+
+.supportMark {
+  width: min(520px, 100%);
+  height: auto;
+  display: block;
+  opacity: 0.95;
+  filter: drop-shadow(0 16px 50px rgba(0, 0, 0, 0.65));
+  transform: translateY(-8px); /* moves it up slightly */
+}
+
+.supportCaption {
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 13px;
+  letter-spacing: 0.01em;
+}
+
+/* ---------- Ask SafePurdue (chat) ---------- */
+.chatRow {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-gap: 14px;
+  gap: 14px;
+  align-items: end;
+  margin-top: 14px;
+}
+
+.chatInput {
+  width: 100%;
+  resize: vertical;
+  min-height: 84px;
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(0, 0, 0, 0.22);
+  color: rgba(255, 255, 255, 0.92);
+  padding: 14px 14px;
+  line-height: 1.6;
+  outline: none;
+  transition: border-color 140ms ease, background 140ms ease;
+}
+
+.chatInput:focus {
+  border-color: rgba(203, 182, 119, 0.55);
+  background: rgba(0, 0, 0, 0.28);
+}
+
+.primaryBtn {
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+  border: 1px solid rgba(203, 182, 119, 0.55);
+  background: rgba(203, 182, 119, 0.18);
+  color: rgba(255, 255, 255, 0.95);
+  padding: 12px 18px;
+  border-radius: 14px;
+  cursor: pointer;
+  font-weight: 800;
+  transition: transform 120ms ease, background 120ms ease, border-color 120ms ease;
+}
+
+.primaryBtn:hover {
+  transform: translateY(-1px);
+  background: rgba(203, 182, 119, 0.22);
+}
+
+.primaryBtn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Example prompt chips */
+.exampleRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.chip {
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.86);
+  padding: 8px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 650;
+  cursor: pointer;
+  transition: transform 120ms ease, background 120ms ease, border-color 120ms ease;
+}
+
+.chip:hover {
+  transform: translateY(-1px);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.errorBox {
+  margin-top: 12px;
+  border: 1px solid rgba(255, 70, 70, 0.28);
+  background: rgba(255, 70, 70, 0.08);
+  color: rgba(255, 255, 255, 0.86);
+  padding: 12px 14px;
+  border-radius: var(--radius-lg);
+}
+
+/* Response cards */
+.chatResult {
+  margin-top: 16px;
+  display: grid;
+  grid-gap: 12px;
+  gap: 12px;
+}
+
+.replyBox {
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius-lg);
+  padding: 14px 14px;
+}
+
+.replyLabel {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.64);
+  margin-bottom: 8px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.replyText {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.88);
+  line-height: 1.7;
+}
+
+/* Resources list */
+.resourceList {
+  display: grid;
+  grid-gap: 12px;
+  gap: 12px;
+}
+
+.resourceCard {
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  background: rgba(0, 0, 0, 0.18);
+  border-radius: var(--radius-lg);
+  padding: 14px 14px;
+}
+
+.resourceName {
+  font-weight: 800;
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.resourceDesc {
+  margin-top: 6px;
+  color: rgba(255, 255, 255, 0.74);
+  line-height: 1.7;
+}
+
+.resourceMeta {
+  margin-top: 10px;
+  display: grid;
+  grid-gap: 6px;
+  gap: 6px;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 13px;
+}
+
+.resourceNotes {
+  margin-top: 10px;
+  color: rgba(255, 255, 255, 0.70);
+  font-style: italic;
+}
+
+/* ---------- Recovery Calendar ---------- */
+.calendarWrap {
+  margin-top: 10px;
+}
+
+.calendarHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.calendarMonth {
+  font-weight: 820;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.calendarHint {
+  color: rgba(255, 255, 255, 0.62);
+  font-size: 12px;
+}
+
+.calendarGrid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  grid-gap: 12px;
+  gap: 12px;
+}
+
+.calendarCell {
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  background: rgba(255, 255, 255, 0.05);
+  padding: 12px;
+  min-height: 56px;
+  display: grid;
+  align-content: start;
+  grid-gap: 8px;
+  gap: 8px;
+}
+
+.calendarCell.active {
+  background: rgba(203, 182, 119, 0.16);
+  border-color: rgba(203, 182, 119, 0.40);
+}
+
+.calendarDayNum {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.82);
+  font-weight: 740;
+}
+
+.calendarTag {
+  justify-self: start;
+  font-size: 11px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: rgba(203, 182, 119, 0.20);
+  border: 1px solid rgba(203, 182, 119, 0.35);
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.calendarDetails {
+  margin-top: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius-xl);
+  padding: 14px;
+}
+
+.calendarSummary {
+  font-weight: 800;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+/* Slides row */
+.slidesHeader {
+  display: grid;
+  grid-gap: 6px;
+  gap: 6px;
+  margin-top: 18px;
+  margin-bottom: 10px;
+}
+
+.slidesTitle {
+  font-weight: 850;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.slidesSub {
+  color: rgba(255, 255, 255, 0.62);
+  font-size: 12px;
+}
+
+.slidesRow {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(340px, 1fr);
+  grid-gap: 14px;
+  gap: 14px;
+  overflow-x: auto;
+  padding-bottom: 6px;
+  scroll-snap-type: x mandatory;
+}
+
+.slideCard {
+  scroll-snap-align: start;
+  border-radius: var(--radius-xl);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  background: rgba(0, 0, 0, 0.18);
+  padding: 18px;
+  box-shadow: var(--shadow2);
+  min-height: 240px;
+}
+
+.slideTitle {
+  font-weight: 900;
+  margin-bottom: 12px;
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.slideBlock {
+  margin-top: 12px;
+}
+
+.slideLabel {
+  color: rgba(255, 255, 255, 0.70);
+  font-weight: 800;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.affirmationCard {
+  background: linear-gradient(180deg, rgba(203, 182, 119, 0.18), rgba(0, 0, 0, 0.18));
+  border-color: rgba(203, 182, 119, 0.30);
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 980px) {
+  .clockTop {
+    grid-template-columns: 1fr;
+  }
+
+  .chatRow {
+    grid-template-columns: 1fr;
+  }
+
+  .primaryBtn {
+    width: 100%;
+  }
+
+  .calendarGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .slidesRow {
+    grid-auto-columns: minmax(280px, 1fr);
+  }
+
+  .panel {
+    padding: 18px;
+    border-radius: 22px;
+  }
+}
+
