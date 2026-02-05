@@ -1,70 +1,101 @@
-"""
-main.py
-------
-FastAPI entry point.
+# backend/app/main.py
 
-Design goal:
-- Define request/response models,
-- Define API routs,
-- Delegate logic to safety + rules modules.
-
-Why:
-- Easier to test: your real logic lives in pure functions in other files.
-- Reduces risk of side-effects and makes refactors safe.
-"""
+from __future__ import annotations
 
 from fastapi import FastAPI
-from pydantic import BaseModel
-from typing import Optional
+from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel, Field
 
-from app.safety import detect_crisis, build_crisis_response
-from app.rules import handle_request
+from app.config import settings
+from app.safety import safety_check
+from app.rules import classify_intent, rank_resources
+from app.resources import RESOURCE_CATALOG
 
-app = FastAPI(
-    title = "SafePurdue Backend",
-    version = "0.1.0",
+app = FastAPI(title="SafePurdue API", version="1.0.0")
+
+
+# ✅ CORS for Codespaces + local dev
+# IMPORTANT: If you use allow_origins=["*"], you must set allow_credentials=False
+# Otherwise browsers can block the request and your frontend shows "Failed to fetch".
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=list(settings.cors_allow_origins),  # e.g. ["*"] in dev
+    allow_credentials=False,  # ✅ FIX for "Failed to fetch" with wildcard origins
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
-class AskRequest(BaseModel):
-    """
-    The request body for POST /ask.
 
-    message: the user's free-text input
-    hour: optional context fro the UI clock (0-120)
-        If provided, ranking can be adjusted to match the time window.
-    """
-    message: str
-    hour: Optional[int] = None
+class AskRequest(BaseModel):
+    message: str = Field(..., min_length=1, max_length=2000)
+
+
+class AskResponse(BaseModel):
+    response: str
+    intent: str
+    resources: list[dict]
+
+
+@app.get("/")
+def root():
+    return {"message": "SafePurdue backend running. Visit /docs for API docs."}
+
 
 @app.get("/health")
 def health():
-    """
-    Simple health endpoint to confirm the service is running.
-    Useful for front-end dec and automated deployment checks. 
-    """
     return {"status": "ok"}
 
-@app.post("/ask")
+
+@app.post("/ask", response_model=AskResponse)
 def ask(req: AskRequest):
-    """
-    Main decision-support endpoint.
+    text = req.message.strip()
 
-    Flow (always determinstic):
-    1) Safety gate: if crisis language is detected, return crisis routing response. 
-    2) Otherwise classify intent + rank resources using rules engine.
+    # 1) Safety check (crisis routing)
+    safety = safety_check(text)
+    if safety.get("is_crisis"):
+        ranked = rank_resources(intent="crisis", user_text=text, catalog=RESOURCE_CATALOG)
+        return {
+            "response": safety.get("response", ""),
+            "intent": "crisis",
+            "resources": ranked[: settings.top_k_resources],
+        }
 
-    Note: 
-    - We do NOT persist anything.
-    - We do NOT log sensitive content by default.
-    - We do NOT generate advice; we return options + resources.
-    """
+    # 2) Intent classification (deterministic)
+    intent = classify_intent(text)
 
-    # Safety check first (high priority)
-    if detect_crisis(req.message):
-        # Crisis response should include:
-        # - supporitve text
-        # - crisis resources
-        # - a flag so UI can render a different style if needed
-        return build_crisis_response()
-    # Non-crisis: run rules engine (intent + top 5)
-    return handle_request(message=req.message, hour=req.hour)
+    # 3) Resource ranking (deterministic)
+    ranked = rank_resources(intent=intent, user_text=text, catalog=RESOURCE_CATALOG)
+
+    # 4) Predefined supportive copy (deterministic)
+    response_map = {
+        "medical": (
+            "If you’d like, I can share Purdue options for medical care and what each one can help with. "
+            "You don’t have to decide anything right now."
+        ),
+        "forensic": (
+            "If you’re considering forensic options, I can share general time-sensitive considerations and "
+            "Purdue-related pathways—only if that’s something you want."
+        ),
+        "confidential_support": (
+            "You deserve support on your terms. If you want confidential help, I can point to Purdue options "
+            "that don’t require reporting."
+        ),
+        "reporting": (
+            "If you’re considering reporting, I can outline Purdue pathways and what to expect. "
+            "It’s always your choice whether to report."
+        ),
+        "academic_housing": (
+            "If school or housing feels harder right now, there may be accommodations and support options. "
+            "I can share Purdue resources that help with academics or housing."
+        ),
+        "general": (
+            "I can help you explore support options at Purdue. If you share what you’re looking for—medical, "
+            "confidential support, reporting, academics/housing—I’ll surface the most relevant resources."
+        ),
+    }
+
+    return {
+        "response": response_map.get(intent, response_map["general"]),
+        "intent": intent,
+        "resources": ranked[: settings.top_k_resources],
+    }
