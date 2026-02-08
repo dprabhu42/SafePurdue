@@ -1,10 +1,12 @@
 import type { ResourceItem } from "../lib/api";
 
 
-export default function ResourceList({ resources }: { resources: Resource[] }) {
-  if (!resources?.length) {
-    return <p className="muted">No resources returned.</p>;
-  }
+
+export default function ResourceList({
+  resources,
+}: {
+  resources: ResourceItem[];
+}) {
 
   return (
     <div className="resourceList">
