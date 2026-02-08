@@ -1,4 +1,4 @@
-import type { Resource } from "../lib/api";
+import type { ResourceItem } from "../lib/api";
 
 
 export default function ResourceList({ resources }: { resources: Resource[] }) {
