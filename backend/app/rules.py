@@ -1,232 +1,175 @@
-"""
-rules.py
---------
-Rules engine.
+# backend/app/rules.py
 
-Responsibilities:
-1. Intent classification
-  - Score user message against keyword lists (no ML).
-2. Resource ranking:
-  - Select top 5 resources based on intent score + optional clock context (hour).
-3. Response composition:
-  - Return supportive, non-directive message + resources.
+from __future__ import annotations
 
-Design goals:
-- Predictable: same input => same output
-- Testable: pure functions, no I/O
-- Safe: do not provide instructions that replace medical/legal professionals
-"""
+from typing import Dict, List
 
-from typing import Dict, List, Optional, Tuple
-from app.resources import RESOURCES, Resource 
-# intents
+
 INTENTS = [
     "medical",
+    "forensic",
     "confidential_support",
     "reporting",
     "academic_housing",
-    "forensic",
+    "crisis",
+    "general",
 ]
-# keyword weights: higher weight = stronger signal for that intent
+
+# keyword weights per intent
 KEYWORDS: Dict[str, Dict[str, int]] = {
     "medical": {
+        "medical": 3,
         "doctor": 3,
         "hospital": 3,
-        "medical": 3,
-        "injury" : 2,
+        "clinic": 3,
+        "push": 4,
+        "injury": 3,
         "pain": 2,
-        "check up": 2,
-        "std": 2,
-        "sti" : 2,
-        "exam": 1
-    },
-    "confidential_support": {
-        "confidential": 3,
-        "private": 2,
-        "advocate": 2,
-        "someone to talk": 2,
-        "support":1,
-        "counseling": 2,
-        "counsellor": 2,
-    },
-    "reporting": {
-        "report":3, 
-        "police": 2,
-        "title x": 3,
-        "complaint": 2,
-        "investigation":2,
-    },
-    "academic_housing":{
-        "professor":2,
-        "class": 1,
-        "deadline":2, 
-        "extension":2,
-        "housing":3,
-        "move":2,
-        "roommate":2,
-        "accommodation":2,
+        "bleeding": 3,
+        "sti": 3,
+        "std": 3,
+        "pregnancy": 3,
+        "test": 2,
+        "testing": 2,
+        "exam": 2,
+        "care": 1,
+        "medicine": 2,
     },
     "forensic": {
-        "evidence":3,
-        "forensic":3,
-        "kit":2,
-        "sane":2,
-        "exam":2
+        "forensic": 4,
+        "rape kit": 5,
+        "sane": 4,
+        "evidence": 4,
+        "kit": 2,
+        "exam": 2,
+        "collection": 3,
+        "preserve": 2,
+        "report later": 2,
+    },
+    "confidential_support": {
+        "confidential": 5,
+        "privacy": 4,
+        "care": 4,
+        "advocate": 3,
+        "advocacy": 3,
+        "counseling": 2,
+        "caps": 4,
+        "talk to someone": 3,
+        "support": 2,
+    },
+    "reporting": {
+        "report": 4,
+        "title ix": 5,
+        "police": 4,
+        "investigation": 3,
+        "complaint": 3,
+        "formal": 2,
+        "conduct": 2,
+        "who do i tell": 2,
+    },
+    "academic_housing": {
+        "class": 2,
+        "classes": 2,
+        "professor": 2,
+        "extension": 3,
+        "absence": 3,
+        "missed": 2,
+        "accommodation": 4,
+        "accommodations": 4,
+        "housing": 4,
+        "room": 2,
+        "dorm": 2,
+        "move": 2,
+        "odos": 4,
+        "dean of students": 4,
+    },
+    "crisis": {
+        "suicide": 10,
+        "kill myself": 10,
+        "self harm": 10,
+        "hurt myself": 10,
+        "end my life": 10,
+        "immediate danger": 10,
+        "in danger": 8,
+        "911": 8,
+        "988": 8,
     },
 }
 
-def score_intents(message: str) -> Dict[str, int]:
-    """
-    Compute a score per indent based on keyboard matches.
 
-    Strategy:
-    -Lowercase normalize text
-    -Sum weights for each keyword that appears as substring
-
-    Unit tests should verify
-    - exact keyword hits raise score
-    - multi-intent messages produce multiple scores
-    - empty message returns all zeros
-    """
-    scores = {intent: 0 for intent in INTENTS}
-    if not message:
-        return scores
-
-# resource ranking
-def hour_stage(hour: Optional[int]) -> Optional[str]:
-    """
-    Converty hour (0-120) into a coarse stage label.
-    Use this to boost certain resources in earlier windows.
-
-    Return None if hour is missing or out of expected range.
-    """
-    if hour is None:
-        return None
-    if hour < 0 or hour > 120:
-        return None
-    if hour <= 24:
-        return "0-24"
-    if hour <= 48:
-        return "24-48"
-    if hour <= 72:
-        return "48-72"
-    if hour <= 96:
-        return "72-96"
-    return "96-120"
-
-def resource_base_score(resource: Resource, intent_scores: Dict[str, int]) -> int:
-    """
-    Score a resource by summing the scores of any intents it matches via tags.
-    Example:
-      - If intent_scores['medical'] is high, resources tagged 'medical' rank higher.
-    """
+def _score_text(text: str, vocab: Dict[str, int]) -> int:
+    t = text.lower()
     score = 0
-    for tage in resource["tags"]:
-        if tag in intent_scores:
-            scroe += intent_scores[tag]
+    for phrase, weight in vocab.items():
+        if phrase in t:
+            score += weight
     return score
 
-def apply_time_boost(score: int, resourc: Resource, stage: Optional[str]) -> int:
+
+def classify_intent(text: str) -> str:
     """
-    Optional clock-aware boosting.
-
-    Example logic:
-    - In early hours (0–24), medical + forensic resources can be slightly boosted.
-    - This is NOT urgency language; it just helps ordering.
-
-    Keep boosts small so intent remains primary driver.
+    Deterministic intent classifier using keyword scoring.
+    Returns one of:
+      medical, forensic, confidential_support, reporting, academic_housing, crisis, general
     """
-    if stage is None:
-        return score
-    tags = set(resource["tags"])
-    if stage == "0-24":
-        if "medical" in tags:
-            score += 2
-        if "forensic" in tags:
-            score += 1
-    return score 
+    t = (text or "").strip()
+    if not t:
+        return "general"
 
-def rank_resources(intent_scores: Dict[str, int], hour: Optional[int]) -> List[Resource]:
-    """
-    Return top 5 resources
-    Ranking steps:
-    1) compute a base score from intent match
-    2) apply time stage boosts
-    3) sort descending; stable tiebreaker by resource id for determinism
+    scores = {intent: _score_text(t, KEYWORDS[intent]) for intent in KEYWORDS.keys()}
+    best_intent = max(scores, key=scores.get)
+    best_score = scores[best_intent]
 
-    Unit tests should confirm deterministic ordering for ties.
-    """
-    stage = hour_stage(hour)
+    # If nothing matched, keep it general
+    if best_score <= 0:
+        return "general"
 
-    scored: List[Tuple[int, str, Resource]] = []
-    for rid, res in RESOURCES.items():
-        base = resource_base_score(res, intent_scores)
-        boosted = apply_time_boost(base, res, stage)
-        scored.append((boosted, rid, res))
-
-    # Sort by score (desc), then id (asc) so ties are deterministic.
-    scored.sort(key=lambda x: (-x[0], x[1]))
-    # Always return exactly up to 5 resources, even if scores are 0.
-    top = [item[2] for item in scored[:5]]
-    return top
-
-
-# --- 3) Response composition ---
-
-def pick_primary_intent(intent_scores: Dict[str, int]) -> str:
-    """
-    Choose the highest scoring intent as primary.
-    If all are 0, default to confidential_support (gentlest baseline).
-    """
-    best_intent = "confidential_support"
-    best_score = 0
-
-    for intent, score in intent_scores.items():
-        if score > best_score:
-            best_intent = intent
-            best_score = score
     return best_intent
 
 
-def compose_message(primary_intent: str, stage: Optional[str]) -> str:
+def rank_resources(intent: str, user_text: str, catalog: List[dict]) -> List[dict]:
     """
-    Return a short, survivor-centered, non-directive message.
-
-    Keep language:
-    - optional (“you may consider…”)
-    - non-urgent
-    - not clinical
+    Rank resources deterministically.
+    Inputs:
+      - intent: intent string
+      - user_text: user message (optional additional boosts)
+      - catalog: list of resource dicts with at least: name, tags, base_weight
+    Output:
+      - sorted list of resource dicts (desc score)
     """
-    base = "Here are some options you may consider. You’re in control of what (if anything) you choose to do."
+    t = (user_text or "").lower()
+    intent = intent if intent in INTENTS else "general"
 
-    if primary_intent == "medical":
-        return base + " If you’d like medical care, these resources can help you explore that option."
-    if primary_intent == "reporting":
-        return base + " If you’re thinking about reporting, these resources can help you understand what that can look like."
-    if primary_intent == "academic_housing":
-        return base + " If you want support with classes, housing, or accommodations, these resources can help you explore options."
-    if primary_intent == "forensic":
-        return base + " If you have questions about evidence or exams, these resources can help you understand your choices."
-     # Default: confidential support
-    return base + " If you want confidential support, these resources can connect you with someone to talk to."
+    ranked = []
+    for r in catalog:
+        base = int(r.get("base_weight", 0))
+        tags = [str(x).lower() for x in r.get("tags", [])]
 
+        score = base
 
-def handle_request(message: str, hour: Optional[int]) -> Dict:
-    """
-    Main rules entrypoint called by the API route.
+        # boost if resource tag matches intent
+        if intent in tags:
+            score += 50
 
-    Returns a response payload that the frontend can render.
-    """
-    scores = score_intents(message)
-    primary = pick_primary_intent(scores)
-    stage = hour_stage(hour)
-    top_resources = rank_resources(scores, hour)
+        # soft boosts based on common terms
+        name = str(r.get("name", "")).lower()
+        desc = str(r.get("description", "")).lower()
 
-    return {
-        "crisis": False,
-        "intent": primary,
-        "stage": stage,
-        "message": compose_message(primary, stage),
-        "resources": top_resources,
-    }
-       
+        if "confidential" in t and ("confidential_support" in tags or "care" in name):
+            score += 10
+        if "medical" in t and "medical" in tags:
+            score += 10
+        if "report" in t and "reporting" in tags:
+            score += 10
+        if ("class" in t or "housing" in t or "accommodation" in t) and "academic_housing" in tags:
+            score += 10
+        if ("crisis" in tags) and ("suicide" in t or "kill myself" in t or "self harm" in t):
+            score += 100
+
+        ranked.append({**r, "_score": score})
+
+    ranked.sort(key=lambda x: x["_score"], reverse=True)
+    for r in ranked:
+        r.pop("_score", None)
+    return ranked
+     
