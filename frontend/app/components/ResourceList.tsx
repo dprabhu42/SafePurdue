@@ -1,9 +1,9 @@
-import type { Resource } from "../lib/api";
 
+import type { RankedResource } from "../lib/api";
 export default function ResourceList({
   resources,
 }: {
-  resources: Resource[];
+  resources: RankedResource[];
 }) {
   return (
     <div className="resourceList">
