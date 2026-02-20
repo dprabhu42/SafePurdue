@@ -1,13 +1,10 @@
-import type { ResourceItem } from "../lib/api";
-
-
+import type { Resource } from "../lib/api";
 
 export default function ResourceList({
   resources,
 }: {
-  resources: ResourceItem[];
+  resources: Resource[];
 }) {
-
   return (
     <div className="resourceList">
       {resources.slice(0, 5).map((r, i) => (
@@ -15,8 +12,16 @@ export default function ResourceList({
           <div className="resourceName">{r.name}</div>
           {r.description && <div className="resourceDesc">{r.description}</div>}
           <div className="resourceMeta">
-            {r.phone && <div><strong>Phone:</strong> {r.phone}</div>}
-            {r.location && <div><strong>Location:</strong> {r.location}</div>}
+            {r.phone && (
+              <div>
+                <strong>Phone:</strong> {r.phone}
+              </div>
+            )}
+            {r.location && (
+              <div>
+                <strong>Location:</strong> {r.location}
+              </div>
+            )}
             {r.url && (
               <div>
                 <strong>Link:</strong>{" "}

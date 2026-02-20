@@ -1,10 +1,15 @@
+
 // frontend/src/lib/api.ts
+// (If your project uses Next app router, this may live at: frontend/app/lib/api.ts)
 
 export type RankedResource = {
   name: string;
   url?: string;
   description?: string;
   tags?: string[];
+  phone?: string;
+  location?: string;
+  notes?: string;
 };
 
 export type AskResponse = {
