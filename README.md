@@ -1,4 +1,5 @@
 # SafePurdue 🛡️
+https://safe-purdue-gamma.vercel.app/
 
 **A survivor-centered decision-support tool for Purdue students**
 
